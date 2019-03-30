@@ -4,6 +4,7 @@
 #include <stack>
 using namespace std;
 
+// Testing a way to use double char operators - will come back once single char solved
 bool isValidOperator(string val)
 {
 	if (val == "++" ||  "--" || "&&" || "||" || "((" || "))")
@@ -35,6 +36,7 @@ bool isOperator(char val)
 	}
 }
 
+// Placeholder till I write the actual function
 int precedence(char val)
 {
 	switch (val)
@@ -55,7 +57,7 @@ int precedence(char val)
 
 }
 
-
+// Error check - partially done
 bool errorCheck(string check)
 {
 	string temp;
@@ -102,6 +104,7 @@ bool errorCheck(string check)
 		if (isOperator(check.at(i)) && isOperator(check.at(i + 1)))
 		{
 			temp = check.at(i) + check.at(i + 1);
+			// Test
 			if (isValidOperator(temp))
 			{
 				cout << "This is ok!" << endl;
