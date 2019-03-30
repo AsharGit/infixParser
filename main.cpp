@@ -68,36 +68,3 @@ int main()
 
 
 
-
-/*while (!isOperator(input.at(i)))
-{
-	num += input.at(i);
-	i++;
-}
-dig.push(stoi(num));
-num = " ";
-op.push(input.at(i));*/
-
-
-// Precedence
-/*switch (ph)
-{
-case '-': return 1;
-	break;
-case '+': return 2;
-	break;
-case '/': return 3;
-	break;
-case '*': return 4;
-	break;
-case '(':
-case ')': return 5;
-	break;
-default:
-	cout << "There was an error. Please try again" << endl;
-		return -1;
-	break;
-
-}*/
-
-
