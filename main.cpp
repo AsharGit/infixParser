@@ -11,9 +11,11 @@ int main()
 
 	do
 	{
+		// Get input
 		cout << "Enter arithmetic problem or -1 to exit: " << endl;
 		getline(cin, input);
-
+		
+		// Check for error in string, proceed if no error is found
 		if (errorCheck(input) == false && input != "-1")
 		{
 			for (int i = 0; i < input.size(); i++)
@@ -26,6 +28,7 @@ int main()
 				}
 				else if (isOperator(input.at(i)))
 				{
+					// Check if temp is empty, if not push into digit stack
 					if (temp != "")
 					{
 						dig.push(stoi(temp));
@@ -41,7 +44,8 @@ int main()
 				dig.push(stoi(temp));
 				temp = "";
 			}
-
+			
+			// Test to see if the numbers and operators are added to the stack
 			cout << "The Operators: ";
 			while (!op.empty())
 			{
