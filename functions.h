@@ -36,25 +36,41 @@ bool isOperator(char val)
 	}
 }
 
-// Placeholder till I write the actual function
 int precedence(char val)
 {
-	switch (val)
+	if (val == '-' || '+')
 	{
-	case '-':
-	case '+':
-	case '/':
-	case '*':
-	case '%':
-	case '<':
-	case '>':
-		return true;
-		break;
-	default:
-		return false;
-		break;
+		return 1;
 	}
 
+	else if (val == '/' || '*')
+	{
+		return 2;
+	}
+}
+
+int calculate(int lhs, int rhs, string op)
+{
+	if (op == "-")
+	{
+		return lhs - rhs;
+	}
+		
+	else if (op == "+")
+	{
+		return lhs + rhs;
+	}
+		
+	else if (op == "/")
+	{
+		return lhs / rhs;
+	}
+
+	else if (op == "*")
+	{
+		return lhs * rhs;
+
+	}
 }
 
 // Error check - partially done
@@ -104,7 +120,6 @@ bool errorCheck(string check)
 		if (isOperator(check.at(i)) && isOperator(check.at(i + 1)))
 		{
 			temp = check.at(i) + check.at(i + 1);
-			// Test
 			if (isValidOperator(temp))
 			{
 				cout << "This is ok!" << endl;

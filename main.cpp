@@ -6,15 +6,19 @@ int main()
 {
 	string input;
 	string temp;
+	int lhs;
+	int rhs;
+	string ops;
 	stack<char> op;
 	stack<int> dig;
+
 
 	do
 	{
 		// Get input
 		cout << "Enter arithmetic problem or -1 to exit: " << endl;
 		getline(cin, input);
-		
+
 		// Check for error in string, proceed if no error is found
 		if (errorCheck(input) == false && input != "-1")
 		{
@@ -34,9 +38,20 @@ int main()
 						dig.push(stoi(temp));
 						temp = "";
 					}
-
+					// Solve the problem if the top of the stack has higher precedence than current input operator
+					while (!op.empty() && precedence(op.top()) >= precedence(input.at(i)))
+					{
+						rhs = dig.top();
+						dig.pop();
+						lhs = dig.top();
+						dig.pop();
+						ops = op.top();
+						op.pop();
+						dig.push(calculate(lhs, rhs, ops));
+					}
 					op.push(input.at(i));
 				}
+				
 			}
 			// Push last number into stack
 			if (temp != "")
@@ -45,30 +60,39 @@ int main()
 				temp = "";
 			}
 			
-			// Test to see if the numbers and operators are added to the stack
-			cout << "The Operators: ";
-			while (!op.empty())
-			{
-				cout << op.top() << ", ";
-				op.pop();
-			}
-
-			cout << endl;
-			cout << "The Digits: ";
-			while (!dig.empty())
-			{
-				cout << dig.top() << ", ";
-				dig.pop();
-			}
-			cout << endl;
 		}
 
+		// Solve what is left after the higher precedence is solved - still some errors
+		while (!op.empty())
+		{
+			rhs = dig.top();
+			dig.pop();
+			lhs = dig.top();
+			dig.pop();
+			ops = op.top();
+			op.pop();
+			dig.push(calculate(lhs, rhs, ops));
+		}
 
+		// Test to see if the numbers and operators are added to the stack
+		cout << "The Operators: ";
+		while (!op.empty())
+		{
+			cout << op.top() << ", ";
+			op.pop();
+		}
 
-	} while (input != "-1");
+		cout << endl;
+		cout << "The Digits: ";
+		while (!dig.empty())
+		{
+			cout << dig.top() << ", ";
+			dig.pop();
+		}
+		cout << endl;
+
+	} while (input != "-1"); // End program once "-1" is entered
 
 	return 0;
 }
-
-
 
