@@ -1,0 +1,9 @@
+Algorithm Idea
+
+Get string input from user
+Error checking 
+Convert string to char and int 
+Seperate digits from operators by creating two stacks 
+Precedents
+Evaluate expression
+
