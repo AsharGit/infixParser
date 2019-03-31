@@ -5,34 +5,13 @@
 #include <cmath>
 using namespace std;
 
-// Testing a way to use double char operators - come back
-bool isValidOperator(string val)
+enum Operator
 {
-	if (val == "++" || val == "--")
-	{
-		return true;
-	}
+	FALSE, NOT, INCREMENT, DECREMENT, POWER, MULTIPLY, DIVIDE, 
+	MODULUS, PLUS, MINUS, LESS_THAN, LESS_THAN_EQUAL, GREATER_THAN, 
+	GREATER_THAN_EQUAL, COMPARE_EQUAL, NOT_EQUAL, AND, OR
+};
 
-	else if (val == "&&" || val == "||")
-	{
-		return true;
-	}
-
-	else if (val == "((" || val == "))")
-	{
-		return true;
-	}
-
-	else if (val == "==" || val == "!=")
-	{
-		return true;
-	}
-
-	else
-	{
-		return false;
-	}
-}
 bool isOperator(char val)
 {
 	switch (val)
@@ -59,122 +38,94 @@ bool isOperator(char val)
 	}
 }
 
-int precedence(char val)
+Operator operation(char oper1)
 {
-	if (val == '||')
+	if (oper1 == '+')
 	{
-		return 1;
+		return PLUS;
 	}
-	else if (val == '&&')
+	else if (oper1 == '-')
 	{
-		return 2;
+		return MINUS;
 	}
-	else if (val == '==' || val == '!=')
+	else if (oper1 == '*')
 	{
-		return 3;
+		return MULTIPLY;
 	}
-	else if (val == '>' || val == '>=' || val == '<' || val == '<=')
+	else if (oper1 == '/')
 	{
-		return 4;
+		return DIVIDE;
 	}
-	else if (val == '-' || val == '+')
+	else if (oper1 == '%')
 	{
-		return 5;
+		return MODULUS;
 	}
-	else if (val == '/' || val == '*' || val == '%')
+	else if (oper1 == '^')
 	{
-		return 6;
+		return POWER;
 	}
-	else if (val == '^')
+	else if (oper1 == '>')
 	{
-		return 7;
+		return GREATER_THAN;
 	}
-	else if (val == '--' || val == '++' || val == '!')
+	else if (oper1 == '<')
 	{
-		return 8;
+		return LESS_THAN;
+	}
+	else if (oper1 == '!')
+	{
+		return NOT;
 	}
 	else
 	{
-		return -1;
+		return FALSE;
 	}
 }
-
-int calculate(int lhs, int rhs, string op)
+Operator operation(char oper1, char oper2)
 {
-	if (op == "-")
+	if (oper1 == '+' && oper2 == '+')
 	{
-		return lhs - rhs;
+		return INCREMENT;
+	}
+	else if (oper1 == '-' && oper2 == '-')
+	{
+		return DECREMENT;
+	}
+	else if (oper1 == '>' && oper2 == '=')
+	{
+		return GREATER_THAN_EQUAL;
+	}
+	else if (oper1 == '<' && oper2 == '=')
+	{
+		return LESS_THAN_EQUAL;
+	}
+	else if (oper1 == '=' && oper2 == '=')
+	{
+		return COMPARE_EQUAL;
+	}
+	else if (oper1 == '!' && oper2 == '=')
+	{
+		return NOT_EQUAL;
+	}
+	else if (oper1 == '&' && oper2 == '&')
+	{
+		return AND;
+	}
+	else if (oper1 == '|' && oper2 == '|')
+	{
+		return OR;
+	}
+	else 
+	{
+		return FALSE;
 	}
 
-	else if (op == "+")
-	{
-		return lhs + rhs;
-	}
-
-	else if (op == "/")
-	{
-		return lhs / rhs;
-	}
-
-	else if (op == "*")
-	{
-		return lhs * rhs;
-
-	}
-
-	else if (op == "%")
-	{
-		return lhs % rhs;
-
-	}
-
-	else if (op == "^")
-	{
-		return pow(lhs, rhs);
-	}
-
-	else if (op == "==")
-	{
-		return lhs == rhs;
-	}
-
-	else if (op == "!=")
-	{
-		return lhs != rhs;
-	}
-
-	else if (op == "<")
-	{
-		return lhs < rhs;
-	}
-
-	else if (op == ">")
-	{
-		return lhs > rhs;
-	}
-
-	else if (op == "<=")
-	{
-		return lhs <= rhs;
-	}
-
-	else if (op == ">=")
-	{
-		return lhs >= rhs;
-	}
-
-	else
-	{
-		return -1;
-	}
 }
 
 // Error check - partially done
 bool errorCheck(string check)
 {
-	string lhs;
-	string rhs;
-	string temp;
+	char lhs, rhs;
 
 	if (check == "" || check == " ")
 	{
@@ -219,15 +170,15 @@ bool errorCheck(string check)
 		{
 			lhs = check.at(i);
 			rhs = check.at(i + 1);
-			temp = lhs + rhs;
-			if (isValidOperator(temp))
+			if (operation(lhs, rhs) != FALSE)
 			{
-				cout << "This is ok!" << endl;
 				return false;
-
 			}
-			cout << "Two binary operators in a row @ char " << i + 1 << endl;
-			return true;
+			else
+			{
+				cout << "Two binary operators in a row @ char " << i + 1 << endl;
+				return true;
+			}
 		}
 	}
 
@@ -242,4 +193,236 @@ bool errorCheck(string check)
 	}
 
 	return false;
+}
+
+	
+int precedence(Operator val)
+{
+	if (val == OR)
+	{
+		return 1;
+	}
+	else if (val == AND)
+	{
+		return 2;
+	}
+	else if (val == COMPARE_EQUAL || val == NOT_EQUAL)
+	{
+		return 3;
+	}
+	else if (val == GREATER_THAN || val == GREATER_THAN_EQUAL || 
+		val == LESS_THAN || val == LESS_THAN_EQUAL)
+	{
+		return 4;
+	}
+	else if (val == MINUS || val == PLUS)
+	{
+		return 5;
+	}
+	else if (val == DIVIDE || val == MULTIPLY || val == MODULUS)
+	{
+		return 6;
+	}
+	else if (val == POWER)
+	{
+		return 7;
+	}
+	else if (val == DECREMENT || val == INCREMENT || val == NOT)
+	{
+		return 8;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int calculate(int lhs, int rhs, Operator op)
+{
+	if (op == MINUS)
+	{
+		return lhs - rhs;
+	}
+
+	else if (op == PLUS)
+	{
+		return lhs + rhs;
+	}
+
+	else if (op == DIVIDE)
+	{
+		return lhs / rhs;
+	}
+
+	else if (op == MULTIPLY)
+	{
+		return lhs * rhs;
+
+	}
+
+	else if (op == MODULUS)
+	{
+		return lhs % rhs;
+
+	}
+
+	else if (op == POWER)
+	{
+		return pow(lhs, rhs);
+	}
+
+	else if (op == COMPARE_EQUAL)
+	{
+		return lhs == rhs;
+	}
+
+	else if (op == NOT_EQUAL)
+	{
+		return lhs != rhs;
+	}
+
+	else if (op == LESS_THAN)
+	{
+		return lhs < rhs;
+	}
+
+	else if (op == GREATER_THAN)
+	{
+		return lhs > rhs;
+	}
+
+	else if (op == LESS_THAN_EQUAL)
+	{
+		return lhs <= rhs;
+	}
+	else if (op == GREATER_THAN_EQUAL)
+	{
+		return lhs >= rhs;
+	}
+	else if (op == INCREMENT)
+	{
+		return ++rhs;
+	}
+	else if (op == DECREMENT)
+	{
+		return --rhs;
+	}
+	else if (op == AND)
+	{
+		return lhs && rhs;
+	}
+	else if (op == OR)
+	{
+		return lhs || rhs;
+	}
+	else if (op == NOT)
+	{
+		return !rhs;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+
+int evaluate(string input)
+{
+	string temp, temp2;
+	char op1, op2;
+	int lhs, rhs;
+	Operator ops, curr;
+	stack<Operator> op;
+	stack<int> dig;
+
+	// Check for error in string, proceed if no error is found
+	if (errorCheck(input) == false)
+	{
+		for (unsigned int i = 0; i < input.size(); i++)
+		{
+			// Check if a number
+			if (isdigit(input.at(i)))
+			{
+				temp += input.at(i);
+			}
+			// Check if a operator
+			else if (isOperator(input.at(i)))
+			{
+				// Check if temp is empty, if not push into digit stack
+				if (temp != "")
+				{
+					dig.push(stoi(temp));
+					temp = "";
+				}
+
+				if (isOperator(input.at(i + 1)))
+				{
+					op1 = input.at(i);
+					op2 = input.at(i + 1);
+					curr = operation(op1, op2);
+					op.push(curr);
+					i++;
+					continue;
+				}
+
+				curr = operation(input.at(i));
+
+				// Solve the problem if the top of the stack has higher precedence than current input operator
+				while (!op.empty() && precedence(op.top()) >= precedence(curr))
+				{
+					rhs = dig.top();
+					dig.pop();
+					lhs = dig.top();
+					dig.pop();
+					ops = op.top();
+					op.pop();
+					dig.push(calculate(lhs, rhs, ops));
+				}
+				op.push(curr);
+			}
+
+		}
+		// Push last number into stack
+		if (temp != "")
+		{
+			dig.push(stoi(temp));
+			temp = "";
+		}
+
+	}
+
+	// Solve what is left after the higher precedence is solved
+	while (!op.empty())
+	{
+		rhs = dig.top();
+		dig.pop();
+		// Check if digit stack is empty
+		if (dig.empty())
+		{
+			lhs = 0;
+		}
+		else
+		{
+			lhs = dig.top();
+			dig.pop();
+		}
+		ops = op.top();
+		op.pop();
+		dig.push(calculate(lhs, rhs, ops));
+	}
+
+	return dig.top();
+}
+
+void prompt()
+{
+	string input;
+
+	do
+	{
+		cout << "Enter arithmetic problem or q to exit: " << endl;
+		getline(cin, input);
+		cout << evaluate(input) << endl;
+
+	} while (input != "q"); // End program once "q" is entered
 }
