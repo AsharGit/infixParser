@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string>
 #include <stack>
+#include <cmath>
 using namespace std;
 
 // Testing a way to use double char operators - will come back once single char solved
@@ -26,6 +27,7 @@ bool isOperator(char val)
 	case '/':
 	case '*':
 	case '%':
+	case '^':
 	case '<':
 	case '>':
 		return true;
@@ -38,14 +40,18 @@ bool isOperator(char val)
 
 int precedence(char val)
 {
-	if (val == '-' || '+')
+	if (val == '-' || val == '+')
 	{
-		return 1;
+		return 5;
 	}
 
-	else if (val == '/' || '*')
+	else if (val == '/' || val == '*' || val == '%')
 	{
-		return 2;
+		return 6;
+	}
+	else if (val == '^')
+	{
+		return 7;
 	}
 }
 
@@ -71,6 +77,18 @@ int calculate(int lhs, int rhs, string op)
 		return lhs * rhs;
 
 	}
+
+	else if (op == "%")
+	{
+		return lhs % rhs;
+
+	}
+
+	else if (op == "^")
+	{
+		return pow(lhs, rhs);
+	}
+
 }
 
 // Error check - partially done
