@@ -5,10 +5,25 @@
 #include <cmath>
 using namespace std;
 
-// Testing a way to use double char operators - will come back once single char solved
+// Testing a way to use double char operators - come back
 bool isValidOperator(string val)
 {
-	if (val == "++" ||  "--" || "&&" || "||" || "((" || "))")
+	if (val == "++" || val == "--")
+	{
+		return true;
+	}
+
+	else if (val == "&&" || val == "||")
+	{
+		return true;
+	}
+
+	else if (val == "((" || val == "))")
+	{
+		return true;
+	}
+
+	else if (val == "==" || val == "!=")
 	{
 		return true;
 	}
@@ -30,6 +45,12 @@ bool isOperator(char val)
 	case '^':
 	case '<':
 	case '>':
+	case '=':
+	case '&':
+	case '|':
+	case '(':
+	case ')':
+	case '!':
 		return true;
 		break;
 	default:
@@ -40,11 +61,26 @@ bool isOperator(char val)
 
 int precedence(char val)
 {
-	if (val == '-' || val == '+')
+	if (val == '||')
+	{
+		return 1;
+	}
+	else if (val == '&&')
+	{
+		return 2;
+	}
+	else if (val == '==' || val == '!=')
+	{
+		return 3;
+	}
+	else if (val == '>' || val == '>=' || val == '<' || val == '<=')
+	{
+		return 4;
+	}
+	else if (val == '-' || val == '+')
 	{
 		return 5;
 	}
-
 	else if (val == '/' || val == '*' || val == '%')
 	{
 		return 6;
@@ -52,6 +88,14 @@ int precedence(char val)
 	else if (val == '^')
 	{
 		return 7;
+	}
+	else if (val == '--' || val == '++' || val == '!')
+	{
+		return 8;
+	}
+	else
+	{
+		return -1;
 	}
 }
 
@@ -61,12 +105,12 @@ int calculate(int lhs, int rhs, string op)
 	{
 		return lhs - rhs;
 	}
-		
+
 	else if (op == "+")
 	{
 		return lhs + rhs;
 	}
-		
+
 	else if (op == "/")
 	{
 		return lhs / rhs;
@@ -89,11 +133,47 @@ int calculate(int lhs, int rhs, string op)
 		return pow(lhs, rhs);
 	}
 
+	else if (op == "==")
+	{
+		return lhs == rhs;
+	}
+
+	else if (op == "!=")
+	{
+		return lhs != rhs;
+	}
+
+	else if (op == "<")
+	{
+		return lhs < rhs;
+	}
+
+	else if (op == ">")
+	{
+		return lhs > rhs;
+	}
+
+	else if (op == "<=")
+	{
+		return lhs <= rhs;
+	}
+
+	else if (op == ">=")
+	{
+		return lhs >= rhs;
+	}
+
+	else
+	{
+		return -1;
+	}
 }
 
 // Error check - partially done
 bool errorCheck(string check)
 {
+	string lhs;
+	string rhs;
 	string temp;
 
 	if (check == "" || check == " ")
@@ -123,7 +203,7 @@ bool errorCheck(string check)
 	}
 
 	// Checks for divisions by 0
-	for (int i = 1; i < check.size(); i++)
+	for (unsigned int i = 1; i < check.size(); i++)
 	{
 		if (check.at(i) == '/' && check.at(i + 1) == '0')
 		{
@@ -133,11 +213,13 @@ bool errorCheck(string check)
 	}
 
 	// Check for double binary operators
-	for (int i = 1; i < check.size(); i++)
+	for (unsigned int i = 1; i < check.size(); i++)
 	{
 		if (isOperator(check.at(i)) && isOperator(check.at(i + 1)))
 		{
-			temp = check.at(i) + check.at(i + 1);
+			lhs = check.at(i);
+			rhs = check.at(i + 1);
+			temp = lhs + rhs;
 			if (isValidOperator(temp))
 			{
 				cout << "This is ok!" << endl;
@@ -150,7 +232,7 @@ bool errorCheck(string check)
 	}
 
 	// Check for double operands
-	for (int i = 1; i < check.size(); i++)
+	for (unsigned int i = 1; i < check.size(); i++)
 	{
 		if (isdigit(check.at(i - 1)) && check.at(i) == ' ' && isdigit(check.at(i + 1)))
 		{

@@ -3,23 +3,21 @@ using namespace std;
 
 int evaluate(string input)
 {
-	string temp;
-	string ops;
-	int lhs;
-	int rhs;
+	string temp, temp2, ops, op1, op2;
+	int lhs, rhs;	
 	stack<char> op;
 	stack<int> dig;
 
 	/*do
 	{*/
 		//// Get input
-		//cout << "Enter arithmetic problem or -1 to exit: " << endl;
+		//cout << "Enter arithmetic problem or q to exit: " << endl;
 		//getline(cin, input);
 
 		// Check for error in string, proceed if no error is found
-		if (errorCheck(input) == false && input != "-1")
+		if (errorCheck(input) == false && input != "q")
 		{
-			for (int i = 0; i < input.size(); i++)
+			for (unsigned int i = 0; i < input.size(); i++)
 			{
 				// Check if a single number or multiple
 				if (isdigit(input.at(i)))
@@ -35,6 +33,16 @@ int evaluate(string input)
 						dig.push(stoi(temp));
 						temp = "";
 					}
+
+					if (isOperator(input.at(i + 1)))
+					{
+						op1 = input.at(i);
+						op2 = input.at(i + 1);
+						temp2 = op1 + op2;
+						// Convert to char - come back to this
+						/*op.push(temp2); */ 
+					}
+
 					// Solve the problem if the top of the stack has higher precedence than current input operator
 					while (!op.empty() && precedence(op.top()) >= precedence(input.at(i)))
 					{
@@ -59,7 +67,7 @@ int evaluate(string input)
 
 		}
 
-		// Solve what is left after the higher precedence is solved - still some errors
+		// Solve what is left after the higher precedence is solved
 		while (!op.empty())
 		{
 			rhs = dig.top();
@@ -73,34 +81,19 @@ int evaluate(string input)
 
 		return dig.top();
 
-		//// Test to see if the numbers and operators are added to the stack
-		//cout << "The Operators: ";
-		//while (!op.empty())
-		//{
-		//	cout << op.top() << ", ";
-		//	op.pop();
-		//}
-
-		//cout << endl;
-		//cout << "The Digits: ";
-		//while (!dig.empty())
-		//{
-		//	cout << dig.top() << ", ";
-		//	dig.pop();
-		//}
-		//cout << endl;
-
-	//} while (input != "-1"); // End program once "-1" is entered
+	//} while (input != "q"); // End program once "q" is entered
 }
+
+
 int main()
 {
 	cout << evaluate("1 + 2 * 3") << endl;
 	cout << evaluate("2 + 2 ^ 2 * 3") << endl;
-	/*cout << evaluate("1 == 2") << endl;
+	//cout << evaluate("1 == 2") << endl;
 	cout << evaluate("1 + 3 > 2") << endl;
-	cout << evaluate("(4 >= 4) && 0") << endl;
-	cout << evaluate("(1 + 2) * 3") << endl;
-	cout << evaluate("++++2 - 5 * (3 ^ 2)") << endl;*/
+	//cout << evaluate("(4 >= 4) && 0") << endl;
+	//cout << evaluate("(1 + 2) * 3") << endl;
+	//cout << evaluate("++++2 - 5 * (3 ^ 2)") << endl;
 
 	return 0;
 }
